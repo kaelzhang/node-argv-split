@@ -1,6 +1,13 @@
 # argv-split [![NPM version](https://badge.fury.io/js/argv-split.svg)](http://badge.fury.io/js/argv-split) [![Build Status](https://travis-ci.org/kaelzhang/node-argv-split.svg?branch=master)](https://travis-ci.org/kaelzhang/node-argv-split) [![Dependency Status](https://gemnasium.com/kaelzhang/node-argv-split.svg)](https://gemnasium.com/kaelzhang/node-argv-split)
 
-<!-- description -->
+Split argv(argument vector) and handle special cases, such as quoted values.
+
+## Why?
+
+```js
+'--abc "a b c"'.split(' ');
+// -> ['--abc', '"a', 'b', 'c"'] -> Oooooooooops!
+```
 
 ## Install
 
@@ -8,10 +15,13 @@
 $ npm install argv-split --save
 ```
 
-## Usage
+## The usage is quite simple: `split(argv)`
 
 ```js
-var argv_split = require('argv-split');
+var split = require('argv-split');
+
+split('--abc "a b c"');
+// ['--abc', 'a b c']
 ```
 
 ## License
