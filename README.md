@@ -6,7 +6,7 @@ Split argv(argument vector) and handle special cases, such as quoted values.
 
 ```js
 '--abc "a b c"'.split(' ');
-// -> ['--abc', '"a', 'b', 'c"'] -> Oooooooooops!
+// ['--abc', '"a', 'b', 'c"'] -> Oooooooooops!
 ```
 
 ## Install
@@ -21,7 +21,30 @@ $ npm install argv-split --save
 var split = require('argv-split');
 
 split('--abc "a b c"');
-// ['--abc', 'a b c']
+// ['--abc', 'a b c'], Oh yeah !!!!
+```
+
+### split(string)
+
+Splits a string, and balance quoted parts.
+
+```js
+split('--abc "a \'b\' c"'); // ['--abc', "a 'b' c"]
+split('--abc "a b c'); // ['--abc', '"a', 'b', 'c']
+```
+
+### split.balance(array)
+
+Balances an array and join incorrect splited parts.
+
+```js
+split.balance(['--abc', '"a', 'b"']); // ['--abc', 'a b']
+```
+
+### split.join(array, [quote='])
+
+```js
+split.join(['--abc', 'a b']); // '--abc "a b"'
 ```
 
 ## License
