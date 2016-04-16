@@ -47,7 +47,7 @@ split.balance(['--abc', '"a', 'b"']); // ['--abc', 'a b']
 ### split.join(array, [quote='])
 
 ```js
-split.join(['--abc', 'a b']); // '--abc "a b"'
+split.join(['--abc', 'a b']); // "--abc 'a b'"
 ```
 
 ## License
