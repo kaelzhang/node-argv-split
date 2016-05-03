@@ -1,6 +1,6 @@
 {
   "name": "argv-split",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Split argv(argument vector) and handle special cases, such as quoted values.",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,8 @@
     "url": "https://github.com/kaelzhang/node-argv-split/issues"
   },
   "devDependencies": {
+    "chai": "*",
     "mocha": "*",
-    "chai": "*"
+    "run-mocha-cases": "^1.1.0"
   }
 }

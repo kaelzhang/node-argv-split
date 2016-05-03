@@ -5,9 +5,37 @@ split.join = join
 split.balance = balance_args
 
 
-function split (string) {
-  var splited = string.split(' ')
-  return balance_args(splited)
+var MATCH_TOKEN = /["'\s]/g
+var STR_BACKSLASH = '\\'
+var STR_WHITESPACE = ' '
+var STR_SINGLE_QUOTE = "'"
+var STR_DOUBLE_QUOTE = '"'
+
+function split (str) {
+  var prev_index = 0
+  var m
+  var match
+  var index
+  var double_quoted
+  var single_quoted
+  var item = ''
+  var splitted = []
+
+  while (m = MATCH_TOKEN.exec(str)) {
+    match = m[0]
+    index = m.index
+
+    switch (match) {
+      case STR_DOUBLE_QUOTE:
+        if (single_quoted) {
+          break
+        }
+
+        if (double_quoted) {
+
+        }
+    }
+  }
 }
 
 
@@ -21,14 +49,9 @@ var SINGLE_QUOTE_END = /'$/
 var QUOTE_PAIR = /^(['"])(.*)\1$/
 
 function unescape (str) {
-  var match = str.match(QUOTE_PAIR)
-  str = match
-    ? match[2]
-    : str
-
   return str.replace(/\\'/g, "'")
             .replace(/\\"/g, '"')
-            .replace(/\\\s/g, ' ')
+            .replace(/\\\s/g, WHITE_SPACE)
 }
 
 
@@ -51,7 +74,7 @@ function concat (host, array) {
 
 // first join the `group`, then push into `host`
 function push_group (host, array) {
-  var item = array.join(' ')
+  var item = array.join(WHITE_SPACE)
   // clean
   array.length = 0
   return push(host, item)
@@ -65,6 +88,7 @@ function balance_args (slices) {
   var single_quoted
   var stack = []
   var max = slices.length - 1
+
   return slices.reduce(function(prev, current, index) {
     if (double_quoted) {
       stack.push(current)
@@ -72,12 +96,11 @@ function balance_args (slices) {
         double_quoted = false
 
         return push_group(prev, stack)
+      }
 
       // -a "a b
       // -> ['-a', '"a', 'b']
-      // balance quotes teminated
-      }
-
+      // balance quotes teminated unexpectedly
       if (index === max) {
         return concat(prev, stack)
       }
@@ -91,7 +114,6 @@ function balance_args (slices) {
         single_quoted = false
 
         return push_group(prev, stack)
-
       }
 
       if (index === max) {
@@ -102,22 +124,19 @@ function balance_args (slices) {
     }
 
     // if not quoted, and current is empty, just skip
-    if (current) {
-      if (DOUBLE_QUOTE_START.test(current)) {
-        stack.push(current)
-        double_quoted = true
-      }
-
-      if (SINGLE_QUOTE_START.test(current)) {
-        stack.push(current)
-        single_quoted = true
-
-      }
-
-      push(prev, current)
+    if (DOUBLE_QUOTE_START.test(current)) {
+      stack.push(current)
+      double_quoted = true
+      return prev
     }
 
-    return prev
+    if (SINGLE_QUOTE_START.test(current)) {
+      stack.push(current)
+      single_quoted = true
+      return prev
+    }
+
+    return push(prev, current)
   }, [])
 }
 
@@ -135,5 +154,5 @@ function join (args, quote) {
       ? quote + arg.replace("'", "\\'") + quote
       : arg
 
-  }).join(' ')
+  }).join(WHITE_SPACE)
 }
