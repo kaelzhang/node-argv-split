@@ -19,12 +19,44 @@ var SINGLE_QUOTE_END = /'$/
 // empty argument is allowed
 // git commit -a -m "" -> empty value is allow by bash, but git commit will fail
 var QUOTE_PAIR = /^(['"])(.*)\1$/
-function trim (str) {
+
+function unescape (str) {
   var match = str.match(QUOTE_PAIR)
-  return match
+  str = match
     ? match[2]
     : str
+
+  return str.replace(/\\'/g, "'")
+            .replace(/\\"/g, '"')
+            .replace(/\\\s/g, ' ')
 }
+
+
+// push the unescaped `item` into `host`
+function push (host, item) {
+  host.push(unescape(item))
+  return host
+}
+
+
+// conat `host` with `array`
+function concat (host, array) {
+  array.forEach(function (item){
+    push(host, item)
+  })
+
+  return host
+}
+
+
+// first join the `group`, then push into `host`
+function push_group (host, array) {
+  var item = array.join(' ')
+  // clean
+  array.length = 0
+  return push(host, item)
+}
+
 
 // #4,
 // Deal with quotes
@@ -39,43 +71,50 @@ function balance_args (slices) {
       if (DOUBLE_QUOTE_END.test(current)) {
         double_quoted = false
 
-        prev.push( trim(stack.join(' ')) )
-        stack.length = 0
+        return push_group(prev, stack)
 
       // -a "a b
       // -> ['-a', '"a', 'b']
       // balance quotes teminated
-      } else if (index === max) {
-        prev = prev.concat(stack)
-        stack.length = 0
       }
 
-    } else if (single_quoted) {
+      if (index === max) {
+        return concat(prev, stack)
+      }
+
+      return prev
+    }
+
+    if (single_quoted) {
       stack.push(current)
       if (SINGLE_QUOTE_END.test(current)) {
         single_quoted = false
 
-        prev.push( trim(stack.join(' ')) )
-        stack.length = 0
+        return push_group(prev, stack)
 
-      } else if (index === max) {
-        prev = prev.concat(stack)
-        stack.length = 0
       }
 
+      if (index === max) {
+        return concat(prev, stack)
+      }
+
+      return prev
+    }
+
     // if not quoted, and current is empty, just skip
-    } else if (current) {
+    if (current) {
       if (DOUBLE_QUOTE_START.test(current)) {
         stack.push(current)
         double_quoted = true
+      }
 
-      } else if (SINGLE_QUOTE_START.test(current)) {
-        stack.push( current )
+      if (SINGLE_QUOTE_START.test(current)) {
+        stack.push(current)
         single_quoted = true
 
-      } else {
-        prev.push( trim(current) )
       }
+
+      push(prev, current)
     }
 
     return prev

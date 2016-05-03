@@ -5,17 +5,24 @@ var split = require('../');
 
 // #4
 var command = 'command -a "a \'b\' c" -b \'a "b" c\' -c'
-  + ' "a b" -d \'a   b\' -e "a" -f \'a\' -g "a b c';
+  + ' "a b" -d \'a   b\' -e "a" -f \'a\' -g a" b \\"a\\" -h "a b c';
 
 var args = [
   'command',
-  '-a', "a 'b' c", 
-  '-b', 'a "b" c', 
+  '-a', "a 'b' c",
+  '-b', 'a "b" c',
   '-c', 'a b',
   '-d', "a   b",
   '-e', 'a',
-  '-f', "a",
-  '-g', '"a', 'b', 'c'
+
+  // the quote is trimed
+  '-f', 'a',
+
+  // not a quote
+  '-g', 'a"', 'b', '"a"',
+
+  // double quote makes no match
+  '-h', '"a', 'b', 'c'
 ];
 
 describe("split(string)", function(){

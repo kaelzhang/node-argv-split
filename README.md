@@ -3,13 +3,20 @@
 
 # argv-split
 
-Split argv(argument vector) and handle special cases, such as quoted values.
+Split argv(argument vector) and handle special cases, such as quoted or escaped values.
 
 ## Why?
 
 ```js
-'--abc "a b c"'.split(' ');
-// ['--abc', '"a', 'b', 'c"'] -> Oooooooooops!
+const split = require('split')
+
+let mkdir = 'mkdir "foo bar"'
+mkdir.split() // ['mkdir', '"foo', 'bar"'] -> Oops!
+split(mkdir)  // ['mkdir', 'foo bar']      -> Oh yeah!
+
+let mkdir2 = 'mkdir foo\\ bar'.split(' ')
+mkdir2.split() // ['mkdir', 'foo\\', 'bar']  -> Oops!
+split(mkdir2)  // ['mkdir', 'foo bar']       -> Oh yeah!
 ```
 
 ## Install
@@ -18,36 +25,50 @@ Split argv(argument vector) and handle special cases, such as quoted values.
 $ npm install argv-split --save
 ```
 
-## The usage is quite simple: `split(argv)`
-
-```js
-var split = require('argv-split');
-
-split('--abc "a b c"');
-// ['--abc', 'a b c'], Oh yeah !!!!
-```
-
 ### split(string)
 
-Splits a string, and balance quoted parts.
+Splits a string, and balance quoted parts. The usage is quite simple, see examples above.
 
-```js
-split('--abc "a \'b\' c"'); // ['--abc', "a 'b' c"]
-split('--abc "a b c'); // ['--abc', '"a', 'b', 'c']
-```
+Returns `Array`
 
 ### split.balance(array)
 
 Balances an array and join incorrect splited parts.
 
+- **array** `Array`
+
+Returns `Array` the balanced array.
+
 ```js
-split.balance(['--abc', '"a', 'b"']); // ['--abc', 'a b']
+split.balance(['--abc', '"a', 'b"']) // ['--abc', 'a b']
 ```
 
-### split.join(array, [quote='])
+### split.join(array, [quote=])
+
+- **array** `Array`
+- **quote** `String=`(optional)
 
 ```js
-split.join(['--abc', 'a b']); // "--abc 'a b'"
+split.join(['mkdir', 'foo bar'])      // 'mkdir foo\ bar'
+split.join(['mkdir', 'foo bar'], '"') // 'mkdir "foo bar"'
+split.join(['mkdir', 'foo bar'], "'") // "mkdir 'foo bar'"
+```
+
+## `argv-split` will handle several special cases
+
+```js
+split('mkdir "abc"')       // ['mkdir', 'abc']
+split('mkdir \\"abc\\"')   // ['mkdir', '"abc"']
+split("mkdir \\'abc\\'")   // ['mkdir', "'abc'"]
+
+let result = split('mkdir "a b')
+
+result
+// ['mkdir', '"a', 'b']
+// Actually, it is not likely to happen, which will switch to an iteractive mode
+
+result.quote
+// If there is an unclosed quote mark, result.quote will be `true`
 ```
 
 ## License
