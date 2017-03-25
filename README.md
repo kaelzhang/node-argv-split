@@ -66,7 +66,7 @@ foo --abc "abc
 If a command unexpectedly ends with a `\`, the error will throw:
 
 ```sh
-foo --abc a\# if there is nothing after \, the error will throw,
+foo --abc a\# if there is nothing after \, the error will throw
 foo --abc a\ # if there is a whitespace after, then -> ['foo', '--abc', 'a ']
 ```
 
