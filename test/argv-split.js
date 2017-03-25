@@ -102,7 +102,7 @@ const split = require('..')
       })
       return
     }
-
+// console.log(split(a), e)
     t.deepEqual(split(a), e)
   })
 })

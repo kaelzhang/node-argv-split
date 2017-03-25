@@ -19,6 +19,65 @@ mkdir2.split(' ') // ['mkdir', 'foo\\', 'bar']  -> Oops!
 split(mkdir2)  // ['mkdir', 'foo bar']       -> Oh yeah!
 ```
 
+## `argv-split` handles all special cases with complete unit tests.
+
+```sh
+# shell command:        javascript array:
+foo a\ b                # ['foo', 'a b']
+foo \'                  # ['foo', '\\\'']
+foo \"                  # ['foo', '\\"']
+foo "a b"               # ['foo', 'a b']
+foo "a\ b"              # ['foo', 'a\\ b']
+foo '\'                 # ['foo', '\\']
+foo --abc="a b"         # ['foo', '--abc=a b']
+foo --abc=a\ b          # ['foo', '--abc=a b']
+
+# argv-split also handles carriage returns
+foo \
+    --abc=a\ b          # ['foo', '--abc=a b']
+
+# etc
+```
+
+```js
+split('foo \\\n    --abc=a\\ b')    // ['foo', '--abc=a b']
+```
+
+## Error Codes
+
+### `UNMATCHED_SINGLE`
+
+If a command missed the closing single quote, the error will throw:
+
+```sh
+foo --abc 'abc
+```
+
+### `UNMATCHED_DOUBLE`
+
+If a command missed the closing double quote, the error will throw:
+
+```sh
+foo --abc "abc
+```
+
+### `ESCAPED_EOF`
+
+If a command unexpectedly ends with a `\`, the error will throw:
+
+```sh
+foo --abc a\# if there is nothing after \, the error will throw,
+foo --abc a\ # if there is a whitespace after, then -> ['foo', '--abc', 'a ']
+```
+
+### `NON_STRING`
+
+If the argument passed to `split` is not a string, the error will throw
+
+```js
+split(undefined)
+```
+
 ## Install
 
 ```sh
@@ -31,46 +90,10 @@ Splits a string, and balance quoted parts. The usage is quite simple, see exampl
 
 Returns `Array`
 
-### split.balance(array)
 
-Balances an array and join incorrect splited parts.
+### ~~split.join()~~
 
-- **array** `Array`
-
-Returns `Array` the balanced array.
-
-```js
-split.balance(['--abc', '"a', 'b"']) // ['--abc', 'a b']
-```
-
-### split.join(array, [quote=])
-
-- **array** `Array`
-- **quote** `String=`(optional)
-
-```js
-split.join(['mkdir', 'foo bar'])      // 'mkdir foo\ bar'
-split.join(['mkdir', 'foo bar'], '"') // 'mkdir "foo bar"'
-split.join(['mkdir', 'foo bar'], "'") // "mkdir 'foo bar'"
-```
-
-## `argv-split` handles several special cases
-
-```js
-split('mkdir "abc"')         // ['mkdir', 'abc']
-split('mkdir \\"abc\\"')     // ['mkdir', '"abc"']
-split("mkdir \\'abc\\'")     // ['mkdir', "'abc'"]
-split('mkdir a\\" bc\\"d e') // ['mkdir', 'a bcd', 'e']
-
-let result = split('mkdir "a b')
-// Actually, it is not likely to happen. If encoutered, shell will switch to an iteractive mode.
-
-result
-// ['mkdir', '"a', 'b']
-
-result.quote
-// If there is an unclosed quote mark, result.quote will be `true`
-```
+Temporarily removed in `2.0.0`, and will be added in `2.1.0`
 
 ## License
 

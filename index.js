@@ -78,7 +78,7 @@ function x () {
 }
 
 const CHARS = {
-  [DOUBLE_QUOTE]: 0,
+  [BACK_SLASH]: 0,
   [SINGLE_QUOTE]: 1,
   [DOUBLE_QUOTE]: 2,
   NORMAL: 3,
@@ -117,7 +117,7 @@ function dq () {
 }
 
 function duq () {
-  double_unquote = false
+  double_quoted = false
 }
 
 function e () {
@@ -155,13 +155,13 @@ function EOF () {
 
 function split (str) {
   if (typeof str !== 'string') {
-    throw new TypeError('Str must be a string. Received ${str}')
+    type_error(`Str must be a string. Received ${str}`, 'NON_STRING')
   }
 
   reset()
 
   const length = str.length
-  let i = 0
+  let i = -1
 
   while (++ i < length) {
     c = str[i]
@@ -185,12 +185,20 @@ function split (str) {
     error('unexpected end with \\', 'ESCAPED_EOF')
   }
 
+  tp()
+
   return ret
 }
 
 
 function error (message, code) {
   const err = new Error(message)
+  err.code = code
+  throw err
+}
+
+function type_error (message, code) {
+  const err = new TypeError(message)
   err.code = code
   throw err
 }

@@ -79,7 +79,7 @@ function x() {
   return c in CHARS ? CHARS[c] : CHARS.NORMAL;
 }
 
-var CHARS = (_CHARS = {}, _defineProperty(_CHARS, DOUBLE_QUOTE, 0), _defineProperty(_CHARS, SINGLE_QUOTE, 1), _defineProperty(_CHARS, DOUBLE_QUOTE, 2), _defineProperty(_CHARS, 'NORMAL', 3), _defineProperty(_CHARS, WHITE_SPACE, 4), _defineProperty(_CHARS, CARRIAGE_RETURN, 5), _CHARS);
+var CHARS = (_CHARS = {}, _defineProperty(_CHARS, BACK_SLASH, 0), _defineProperty(_CHARS, SINGLE_QUOTE, 1), _defineProperty(_CHARS, DOUBLE_QUOTE, 2), _defineProperty(_CHARS, 'NORMAL', 3), _defineProperty(_CHARS, WHITE_SPACE, 4), _defineProperty(_CHARS, CARRIAGE_RETURN, 5), _CHARS);
 
 var c = '';
 var stash = '';
@@ -112,7 +112,7 @@ function dq() {
 }
 
 function duq() {
-  double_unquote = false;
+  double_quoted = false;
 }
 
 function e() {
@@ -155,7 +155,7 @@ function split(str) {
   reset();
 
   var length = str.length;
-  var i = 0;
+  var i = -1;
 
   while (++i < length) {
     c = str[i];
@@ -178,6 +178,8 @@ function split(str) {
   if (escaped) {
     error('unexpected end with \\', 'ESCAPED_EOF');
   }
+
+  tp();
 
   return ret;
 }
