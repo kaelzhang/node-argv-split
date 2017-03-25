@@ -49,8 +49,18 @@ split('foo \\\n    --abc=a\\ b')    // ['foo', '--abc=a b']
 
 If a command missed the closing single quote, the error will throw:
 
+Shell command:
+
 ```sh
 foo --abc 'abc
+```
+
+```js
+try {
+  split('foo --abc \'abc')
+} catch (e) {
+  console.log(e.code)   // 'UNMATCHED_SINGLE'
+}
 ```
 
 ### `UNMATCHED_DOUBLE`
