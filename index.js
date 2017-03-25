@@ -18,9 +18,9 @@ module.exports = split
 const MATRIX = {
   // object is more readable than multi-dim array.
   0: [a,    suq,    a,      a,      a,      EOF],
-  1: [eaue, aue,    eaue,   aue,    aue     ue],
+  1: [eaue, aue,    eaue,   aue,    aue,    ue],
   2: [e,    a,      duq,    a,      a,      EOF],
-  3: [eaue, aue,    aue,    aue,    eaue    ue],
+  3: [eaue, aue,    aue,    aue,    eaue,   ue],
   4: [e,    sq,     dq,     a,      tp,     EOF]
 }
 
@@ -72,8 +72,8 @@ const WHITE_SPACE = ' '
 const CARRIAGE_RETURN = '\n'
 
 function x () {
-  return s in CHARS
-    ? CHARS[s]
+  return c in CHARS
+    ? CHARS[c]
     : CHARS.NORMAL
 }
 
@@ -101,7 +101,7 @@ function reset () {
 }
 
 function a () {
-  stash += s
+  stash += c
 }
 
 function sq () {
@@ -113,7 +113,7 @@ function suq () {
 }
 
 function dq () {
-  double_quote = true
+  double_quoted = true
 }
 
 function duq () {
@@ -130,13 +130,13 @@ function ue () {
 
 // add a backslash and a normal char, and turn off escaping
 function aue () {
-  stash += BACK_SLASH + s
+  stash += BACK_SLASH + c
   escaped = false
 }
 
 // add a escaped char and turn off escaping
 function eaue () {
-  stash += s
+  stash += c
   escaped = false
 }
 
@@ -164,7 +164,7 @@ function split (str) {
   let i = 0
 
   while (++ i < length) {
-    s = str[i]
+    c = str[i]
 
     MATRIX[y()][x()]()
 
@@ -204,7 +204,7 @@ function error (message, code) {
 //       return
 //     }
 
-//     return /\s+/.test(arg)
+//     return /\c+/.test(arg)
 //       // a b c -> 'a b c'
 //       // a 'b' -> 'a \'b\''
 //       ? quote + arg.replace("'", "\\'") + quote
