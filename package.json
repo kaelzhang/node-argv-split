@@ -15,7 +15,8 @@
     "argument-vector",
     "split",
     "quote",
-    "quoted-value"
+    "quoted-value",
+    "balance"
   ],
   "engines": {
     "node": ">=0.10.0"
@@ -26,8 +27,6 @@
     "url": "https://github.com/kaelzhang/node-argv-split/issues"
   },
   "devDependencies": {
-    "chai": "*",
-    "mocha": "*",
-    "run-mocha-cases": "^1.1.0"
+    "ava": "^0.18.2"
   }
 }
