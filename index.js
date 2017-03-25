@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = split
-split.join = join
+// split.join = join
 
 
 // Flags                        Characters
@@ -16,11 +16,12 @@ split.join = join
 // 4 ue,uq     e         sq        dq        a +       tp        EOF
 
 const MATRIX = {
-  0: [a,   suq,  a,    a,    a,    EOF],
-  1: [],
-  2: [e,   a,    duq,  a,    a,    ue],
-  3: [],
-  4:
+  // object is more readable than multi-dim array.
+  0: [a,    suq,    a,      a,      a,      EOF],
+  1: [eaue, aue,    eaue,   aue,    aue     ue],
+  2: [e,    a,      duq,    a,      a,      EOF],
+  3: [eaue, aue,    aue,    aue,    eaue    ue],
+  4: [e,    sq,     dq,     a,      tp,     EOF]
 }
 
 // - a: add
@@ -127,6 +128,26 @@ function ue () {
   escaped = false
 }
 
+// add a backslash and a normal char, and turn off escaping
+function aue () {
+  stash += BACK_SLASH + s
+  escaped = false
+}
+
+// add a escaped char and turn off escaping
+function eaue () {
+  stash += s
+  escaped = false
+}
+
+// try to push
+function tp () {
+  if (stash) {
+    ret.push(stash)
+    stash = ''
+  }
+}
+
 function EOF () {
   ended = true
 }
@@ -175,19 +196,19 @@ function error (message, code) {
 }
 
 
-function join (args, options = {}) {
-  const quote = options.quote || "'"
+// function join (args, options = {}) {
+//   const quote = options.quote || "'"
 
-  return args.map(function (arg) {
-    if (!arg) {
-      return
-    }
+//   return args.map(function (arg) {
+//     if (!arg) {
+//       return
+//     }
 
-    return /\s+/.test(arg)
-      // a b c -> 'a b c'
-      // a 'b' -> 'a \'b\''
-      ? quote + arg.replace("'", "\\'") + quote
-      : arg
+//     return /\s+/.test(arg)
+//       // a b c -> 'a b c'
+//       // a 'b' -> 'a \'b\''
+//       ? quote + arg.replace("'", "\\'") + quote
+//       : arg
 
-  }).join(WHITE_SPACE)
-}
+//   }).join(WHITE_SPACE)
+// }
