@@ -10,13 +10,13 @@ Split argv(argument vector) and handle special cases, such as quoted or escaped 
 ```js
 const split = require('split')
 
-let mkdir = 'mkdir "foo bar"'
-mkdir.split(' ') // ['mkdir', '"foo', 'bar"'] -> Oops!
-split(mkdir)  // ['mkdir', 'foo bar']      -> Oh yeah!
+const mkdir = 'mkdir "foo bar"'
+mkdir.split(' ')    // ['mkdir', '"foo', 'bar"']  -> Oops!
+split(mkdir)        // ['mkdir', 'foo bar']       -> Oh yeah!
 
-let mkdir2 = 'mkdir foo\\ bar'.split(' ')
-mkdir2.split(' ') // ['mkdir', 'foo\\', 'bar']  -> Oops!
-split(mkdir2)  // ['mkdir', 'foo bar']       -> Oh yeah!
+const mkdir2 = 'mkdir foo\\ bar'.split(' ')
+mkdir2.split(' ')   // ['mkdir', 'foo\\', 'bar']  -> Oops!
+split(mkdir2)       // ['mkdir', 'foo bar']       -> Oh yeah!
 ```
 
 ## `argv-split` handles all special cases with complete unit tests.
