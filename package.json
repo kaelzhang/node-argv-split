@@ -6,7 +6,14 @@
     "index.js"
   ],
   "scripts": {
-    "test": "ava --verbose --timeout=10s"
+    "test": "NODE_DEBUG={{name}} nyc ava --timeout=10s --verbose",
+    "test:dev": "NODE_DEBUG={{name}} nyc ava --timeout=10s --verbose && npm run report:dev",
+    "lint": "eslint .",
+    "fix": "eslint . --fix",
+    "// posttest": "npm run report",
+    "report": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "report:dev": "nyc report --reporter=html && npm run report:open",
+    "report:open": "open coverage/index.html"
   },
   "repository": {
     "type": "git",
@@ -34,6 +41,7 @@
     ]
   },
   "devDependencies": {
-    "ava": "^6.2.0"
+    "ava": "^6.2.0",
+    "nyc": "^15.0.1"
   }
 }

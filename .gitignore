@@ -1,4 +1,10 @@
-/split.js
+# Node, Coverage, NPM
+/.nyc_output
+/coverage
+/coverage.lcov
+/package-lock.json
+/*.tgz
+
 
 # Numerous always-ignore extensions
 *.bak
@@ -15,6 +21,9 @@
 *~
 *.sass-cache
 *.lock
+*.rdb
+*.db
+nohup.out
 
 # OS or Editor folders
 .DS_Store
@@ -24,8 +33,8 @@
 .settings
 .tmproj
 *.esproj
-*.sublime-project
-*.sublime-workspace
+*.*-project
+*.*-workspace
 nbproject
 thumbs.db
 
@@ -38,6 +47,7 @@ node_modules
 old/
 *-old/
 *-notrack/
+no-track/
 build/
 combo/
 reference/
@@ -45,5 +55,10 @@ jscoverage_lib/
 temp/
 tmp/
 
-
-package-*.json
+# Java
+.mvn
+.gradle
+.vscode
+.project
+.classpath
+/gradle
