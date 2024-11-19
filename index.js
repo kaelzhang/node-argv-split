@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = split
-// split.join = join
+split.join = join
 
 
 // Flags                        Characters
@@ -155,7 +155,7 @@ function EOF () {
 
 function split (str) {
   if (typeof str !== 'string') {
-    type_error(`Str must be a string. Received ${str}`, 'NON_STRING')
+    type_error(`\`str\` must be a string. Received ${str}`, 'NON_STRING')
   }
 
   reset()
@@ -204,19 +204,30 @@ function type_error (message, code) {
 }
 
 
-// function join (args, options = {}) {
-//   const quote = options.quote || "'"
+const REGEX_NEED_QUOTE = /\s|"|'/
 
-//   return args.map(function (arg) {
-//     if (!arg) {
-//       return
-//     }
+function join(args, {
+  quote = DOUBLE_QUOTE
+} = {}) {
+  if (![SINGLE_QUOTE, DOUBLE_QUOTE].includes(quote)) {
+    type_error(
+      `\`options.quote\` must be either ${SINGLE_QUOTE} or ${DOUBLE_QUOTE}. Received ${quote}` , 'INVALID_QUOTE'
+    )
+  }
 
-//     return /\c+/.test(arg)
-//       // a b c -> 'a b c'
-//       // a 'b' -> 'a \'b\''
-//       ? quote + arg.replace("'", "\\'") + quote
-//       : arg
+  const process_arg = arg => {
+    if (!REGEX_NEED_QUOTE.test(arg)) {
+      return arg
+    }
 
-//   }).join(WHITE_SPACE)
-// }
+    if (!arg.includes(quote)) {
+      return quote + arg + quote
+    }
+
+    // escape quote
+    const escaped = arg.replace(new RegExp(quote, 'g'), `\\${quote}`)
+    return quote + escaped + quote
+  }
+
+  return args.map(process_arg).join(WHITE_SPACE)
+}

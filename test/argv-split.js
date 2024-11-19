@@ -3,7 +3,7 @@
 const test = require('ava')
 const split = require('..')
 
-;[
+const CASES = [
 {
   d: 'normal',
   a: 'a b c',
@@ -123,25 +123,66 @@ const split = require('..')
 {
   d: 'not a string',
   a: 1,
-  throws: 'Str must be a string. Received 1'
+  throws: '`str` must be a string. Received 1'
 },
+{
+  d: 'join: invalid args',
+  a: [[], {quote:'a'}],
+  throws: '`options.quote` must be either \' or ". Received a',
+  fn: split.join
+},
+{
+  d: 'join: normal',
+  a: [['a', 'b', 'c']],
+  e: 'a b c',
+  fn: split.join
+},
+{
+  d: 'join: need quote, double-quoted',
+  a: [['a b c']],
+  e: '"a b c"',
+  fn: split.join
+},
+{
+  d: 'join: need quote, single-quoted',
+  a: [['a b c'], {quote: "'"}],
+  e: "'a b c'",
+  fn: split.join
+},
+{
+  d: 'join: need quote, double-quoted, and escaped',
+  a: [
+    [
+      'a "b c',
+      // 'a should be quoted
+      "'a"
+    ],
+    {quote: '"'}
+  ],
+  e: '"a \\"b c" "\'a"',
+  fn: split.join
+}
+]
 
-
-].forEach(({d, a, e, throws, only}) => {
+CASES.forEach(({d, a, e, throws, only, fn = split}) => {
   const t = only
     ? test.only
     : test
 
   t(d, t => {
+    const args = Array.isArray(a)
+      ? a
+      : [a]
+
     if (throws) {
       t.throws(() => {
-        split(a)
+        fn(...args)
       }, {
         message: throws
       })
       return
     }
 
-    t.deepEqual(split(a), e)
+    t.deepEqual(fn(...args), e)
   })
 })

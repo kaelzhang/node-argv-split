@@ -1,6 +1,6 @@
 {
   "name": "argv-split",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Split argv(argument vector) and handle special cases, such as quoted values.",
   "files": [
     "index.js"

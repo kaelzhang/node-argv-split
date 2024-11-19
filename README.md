@@ -90,19 +90,31 @@ split(undefined)
 ## Install
 
 ```sh
-$ npm install argv-split --save
+$ npm i argv-split
 ```
 
-### split(string)
+### split(string) -> Array<string>
 
 Splits a string, and balance quoted parts. The usage is quite simple, see examples above.
 
-Returns `Array`
+Returns `Array<string>`
 
 
-### ~~split.join()~~
+### split.join(args, options?) -> string
 
-Temporarily removed in `2.0.0`, and will be added in `2.1.0`
+Join the given array of argument vectors into a valid argument string
+
+New in `3.1.0`
+
+- **args** `Array<string>` arguments to be joined
+- **options?** `Object=`
+  - **quote** `string="` should we use single quote or double quote when a certain argument needs to be quoted. Defaults to `"`
+
+```js
+'command ' + join(['foo "bar', "'baz"])
+
+// command "foo \"bar" "'baz"
+```
 
 ## License
 
