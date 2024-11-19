@@ -93,14 +93,16 @@ split(undefined)
 $ npm i argv-split
 ```
 
-### split(string) -> Array<string>
+# Methods
+
+## split(string) -> Array<string>
 
 Splits a string, and balance quoted parts. The usage is quite simple, see examples above.
 
 Returns `Array<string>`
 
 
-### split.join(args, options?) -> string
+## split.join(args, options?) -> string
 
 Join the given array of argument vectors into a valid argument string
 
@@ -114,6 +116,17 @@ New in `3.1.0`
 'command ' + join(['foo "bar', "'baz"])
 
 // command "foo \"bar" "'baz"
+```
+
+### Handle Line Feed
+
+There is a special value of `split.LF` which could help us to create valid commands with line feeds:
+
+```js
+'kubectl' + join(['apply', '--prune', '-f', 'manifest.yaml', split.LF, '-l', 'app=nginx'])
+
+// kubectl apply --prune -f manifest.yaml \
+// -l app=nginx
 ```
 
 ## License

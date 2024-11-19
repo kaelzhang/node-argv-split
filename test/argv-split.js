@@ -161,6 +161,12 @@ const CASES = [
   ],
   e: '"a \\"b c" "\'a"',
   fn: split.join
+},
+{
+  d: 'join: line feed',
+  a: [['a', split.LF, 'b']],
+  e: 'a \\\nb',
+  fn: split.join
 }
 ]
 

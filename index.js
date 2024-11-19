@@ -1,9 +1,5 @@
 'use strict'
 
-module.exports = split
-split.join = join
-
-
 // Flags                        Characters
 //             0         1         2         3         4         5
 // ------------------------------------------------------------------------
@@ -69,7 +65,7 @@ const BACK_SLASH = '\\'
 const SINGLE_QUOTE = "'"
 const DOUBLE_QUOTE = '"'
 const WHITE_SPACE = ' '
-const CARRIAGE_RETURN = '\n'
+const LINE_FEED = '\n'
 
 function x () {
   return c in CHARS
@@ -83,7 +79,7 @@ const CHARS = {
   [DOUBLE_QUOTE]: 2,
   NORMAL: 3,
   [WHITE_SPACE]: 4,
-  [CARRIAGE_RETURN]: 5
+  [LINE_FEED]: 5
 }
 
 let c = ''
@@ -205,6 +201,9 @@ function type_error (message, code) {
 
 
 const REGEX_NEED_QUOTE = /\s|"|'/
+const CLI_LINE_FEED = '\\\n'
+
+const LF = Symbol.for('argv-split:LF')
 
 function join(args, {
   quote = DOUBLE_QUOTE
@@ -229,5 +228,21 @@ function join(args, {
     return quote + escaped + quote
   }
 
-  return args.map(process_arg).join(WHITE_SPACE)
+  let joined = ''
+
+  for (const arg of args) {
+    if (arg === LF) {
+      joined += CLI_LINE_FEED
+      continue
+    }
+
+    joined += process_arg(arg) + WHITE_SPACE
+  }
+
+  return joined.trimRight()
 }
+
+
+module.exports = split
+split.join = join
+split.LF = LF
