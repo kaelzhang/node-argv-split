@@ -31,7 +31,7 @@ foo '\'                 # ['foo', '\\']
 foo --abc="a b"         # ['foo', '--abc=a b']
 foo --abc=a\ b          # ['foo', '--abc=a b']
 
-# argv-split also handles carriage returns
+# argv-split also handles line feeds
 foo \
     --abc=a\ b          # ['foo', '--abc=a b']
 
@@ -118,7 +118,7 @@ New in `3.1.0`
 // command "foo \"bar" "'baz"
 ```
 
-### Handle Line Feed
+### Handle Line Feeds
 
 There is a special value of `split.LF` which could help us to create valid commands with line feeds:
 

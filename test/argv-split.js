@@ -85,7 +85,7 @@ const CASES = [
   e: ['bar\\" baz']
 },
 {
-  d: 'carriage return',
+  d: 'line feeds',
   a: `--foo=bar \\
   --baz=qux`,
   e: ['--foo=bar', '--baz=qux']
