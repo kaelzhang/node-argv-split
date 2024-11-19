@@ -85,10 +85,47 @@ const split = require('..')
   e: ['bar\\" baz']
 },
 {
-  d: 'signle-quoted escaped single quote, should throw',
+  d: 'carriage return',
+  a: `--foo=bar \\
+  --baz=qux`,
+  e: ['--foo=bar', '--baz=qux']
+},
+{
+  d: 'unnecessary escape',
+  a: 'foo \\bar',
+  e: ['foo', '\\bar']
+},
+{
+  d: 'end with whitespace',
+  a: 'foo ',
+  e: ['foo']
+},
+{
+  d: 'end with carriage return',
+  a: 'foo \n',
+  e: ['foo']
+},
+{
+  d: 'single-quoted escaped single quote, should throw',
   a: "'bar\' baz'",
-  throws: true
-}
+  throws: 'unmatched single quote'
+},
+{
+  d: 'double-quoted escaped single quote, should throw',
+  a: '"bar\" baz"',
+  throws: 'unmatched double quote'
+},
+{
+  d: 'unexpected escaped eof, should throw',
+  a: 'bar \\',
+  throws: 'unexpected end with \\'
+},
+{
+  d: 'not a string',
+  a: 1,
+  throws: 'Str must be a string. Received 1'
+},
+
 
 ].forEach(({d, a, e, throws, only}) => {
   const t = only
@@ -99,10 +136,12 @@ const split = require('..')
     if (throws) {
       t.throws(() => {
         split(a)
+      }, {
+        message: throws
       })
       return
     }
-// console.log(split(a), e)
+
     t.deepEqual(split(a), e)
   })
 })
