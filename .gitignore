@@ -46,4 +46,4 @@ temp/
 tmp/
 
 
-/test.js
+package-*.json

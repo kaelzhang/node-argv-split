@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/kaelzhang/node-argv-split.svg?branch=master)](https://travis-ci.org/kaelzhang/node-argv-split)
-[![Dependency Status](https://gemnasium.com/kaelzhang/node-argv-split.svg)](https://gemnasium.com/kaelzhang/node-argv-split)
+[![Build Status](https://travis-ci.org/kaelzhang/node-argv-split.svg?branch=master)](https://github.com/kaelzhang/node-argv-split/actions/workflows/nodejs.yml)
 
 # argv-split
 
